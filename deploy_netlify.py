@@ -28,7 +28,7 @@ HERE = Path(__file__).resolve().parent
 
 TOKEN_FILE = HERE / ".netlify-token"
 SITE_ID_FILE = HERE / ".netlify-site-id"
-DEFAULT_SITE_NAME = "hf-quant-policy-monitor"
+DEFAULT_SITE_NAME = "cn-hf-quant-watch"
 
 # 需要排除、不部署到线上的文件/目录
 EXCLUDE_DIRS = {".git", "__pycache__", ".workbuddy", "node_modules"}

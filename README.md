@@ -2,6 +2,8 @@
 
 微信公众号情报监控页 —— 面向个人／机构类中高频量化投资人，跟踪中国监管与交易所对高频量化业务的潜在政策与技术变化。
 
+- **线上地址**：https://cn-hf-quant-watch.netlify.app
+- **GitHub**：https://github.com/xinyuan8278-code/hf-quant-policy-monitor
 - **检索渠道**：微信公众号文章（搜狗微信检索，会话预热版脚本，24 关键词矩阵）
 - **更新机制**：7 天窗口 + 跨日去重（只输出「近 7 天 ∩ 未被历史推送过」的新增项）
 - **五个维度**：交易所规则调整 / 监管动向与新规 / 技术与交易接入 / 机房搬迁与线路 / 外资高频与做市
@@ -21,10 +23,12 @@
 
 ```bash
 PY="C:/Users/Lenovo/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
-$PY deploy_netlify.py --site-name hf-quant-policy-monitor
+$PY deploy_netlify.py --site-name cn-hf-quant-watch
 ```
 
 凭据：`.netlify-token`（已 gitignore），或环境变量 `NETLIFY_AUTH_TOKEN`。
+
+> 注：Netlify 站点名若含 `policy` 会被判为非法子域（422 `subdomain is not valid`），故实际站点名为 `cn-hf-quant-watch`。
 
 ## 口径与限制
 
