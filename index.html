@@ -89,6 +89,9 @@
   .b-rumor{color:#e0708a;border-color:rgba(224,112,138,.4);background:rgba(224,112,138,.1)}
   .b-vendor{color:#9d8ce0;border-color:rgba(157,140,224,.38);background:rgba(157,140,224,.1)}
   .b-ref{color:#6f7885;border-color:#333b45;background:rgba(255,255,255,.02)}
+  .b-new{color:#fff;border-color:var(--red);background:var(--red)}
+  .card.isnew{border-color:rgba(216,32,58,.45)}
+  .card.isnew::after{content:"";position:absolute;left:0;top:12px;bottom:12px;width:2px;border-radius:2px;background:var(--red)}
   .catpill{font-size:11px;padding:2px 9px;border-radius:5px;background:rgba(216,32,58,.12);color:#e8708a;border:1px solid rgba(216,32,58,.26);white-space:nowrap;font-weight:600}
   .caret{color:var(--muted2);font-size:12px;flex:none;margin-top:3px;transition:.2s;user-select:none}
   .card.open .caret{transform:rotate(90deg);color:var(--red2)}
@@ -131,11 +134,7 @@
 
   <div class="kpis" id="kpis"></div>
 
-  <div class="notice">
-    <b>本次去重结论：</b>7 天窗口内共命中 24 篇，与已推送指纹清单（35 条）逐条比对后，<b>新增 0 篇</b>——
-    命中集全部为历史已推送条目，故本次无新增相关文章。页面展示的是当前 7 天窗口内的存量有效条目（按五类维度筛选），
-    未用旧文充数。
-  </div>
+  <div class="notice" id="notice"></div>
 
   <h2><span class="bar"></span>分类清单 <span class="cnt" id="listCnt"></span></h2>
   <div class="filters" id="filters"></div>
@@ -193,6 +192,17 @@
     kp.appendChild(d);
   });
 
+  /* 结论提示（随 stats.freshToday 动态渲染） */
+  var fresh = M.stats.freshToday || 0;
+  var freshInList = A.filter(function(a){ return a.new === true; }).length;
+  document.getElementById('notice').innerHTML = fresh > 0
+    ? '<b>本次去重结论：</b>7 天窗口内共命中 ' + M.stats.hits + ' 篇，与已推送指纹清单（' + M.stats.seenFingerprints +
+      ' 条）逐条比对后，<b>新增 ' + fresh + ' 篇</b>。下方带 <span class="badge b-new">本次新增</span> 角标的条目即为本轮新出现、此前未推送过的文章。'
+    : '<b>本次去重结论：</b>7 天窗口内共命中 ' + M.stats.hits + ' 篇，与已推送指纹清单（' + M.stats.seenFingerprints +
+      ' 条）逐条比对后，<b>新增 0 篇</b>——命中集全部为历史已推送条目，故本次无新增相关文章。' +
+      '页面展示的是当前 7 天窗口内的存量有效条目（按五类维度筛选），未用旧文充数。' +
+      (freshInList ? '（注：下方有 ' + freshInList + ' 条标记为新增，与 KPI 不一致，请核查数据。）' : '');
+
   /* 分类映射 */
   var catMap={}; M.cats.forEach(function(c){ catMap[c.key]=c; });
   var NAT={official:'官方公告',media:'自媒体·非官方',rumor:'推测·传闻',vendor:'厂商宣传',ref:'参考资料'};
@@ -201,9 +211,10 @@
   var cur='all';
   var fb=document.getElementById('filters');
   function countOf(tier){ return A.filter(function(a){return a.tier===tier}).length; }
+  var newCount = freshInList;
   var btns=[{key:'all',label:'全部',n:A.length},{key:'core',label:'核心相关',n:countOf('core')}];
   M.cats.forEach(function(c){ btns.push({key:c.key,label:c.label,n:A.filter(function(a){return a.cat===c.key}).length}); });
-  btns.push({key:'yes',label:'仅新增（本次为 0）',n:0});
+  btns.push({key:'yes',label:'本次新增',n:newCount});
   btns.forEach(function(b){
     var el=document.createElement('button'); el.className='fbtn'+(b.key==='all'?' on':'');
     el.innerHTML=b.label+'<span class="n">'+b.n+'</span>';
@@ -221,19 +232,19 @@
   function rows(){
     if(cur==='all')  return A.slice();
     if(cur==='core') return A.filter(function(a){return a.tier==='core'});
-    if(cur==='yes')  return [];
+    if(cur==='yes')  return A.filter(function(a){return a.new===true});
     return A.filter(function(a){return a.cat===cur});
   }
   function render(){
     var r=rows(); list.innerHTML='';
-    cntEl.textContent = '共 '+r.length+' 条' + (cur==='yes' ? '（本次 0 篇新增）' : '') + ' · 按发布时间由新到旧';
+    cntEl.textContent = '共 '+r.length+' 条' + (cur==='yes' ? '（本次新增）' : '') + ' · 按发布时间由新到旧';
     if(!r.length){
       list.innerHTML='<div class="empty">'+(cur==='yes'?'本次无新增相关文章':'该分类下暂无条目')+'</div>';
       return;
     }
     r.forEach(function(a){
       var c=catMap[a.cat]||{label:a.cat};
-      var card=document.createElement('article'); card.className='card';
+      var card=document.createElement('article'); card.className='card'+(a.new===true?' isnew':'');
       card.innerHTML =
         '<div class="crow">'+
           '<div class="caret">▶</div>'+
@@ -244,6 +255,7 @@
               '<span>'+esc(a.date)+'</span>'+
               '<span class="catpill">'+esc(c.label)+'</span>'+
               '<span class="badge b-'+a.nature+'">'+(NAT[a.nature]||a.nature)+'</span>'+
+              (a.new===true?'<span class="badge b-new">本次新增</span>':'')+
             '</div>'+
             '<div class="note"><span class="lbl">源摘要 / 留档注记</span>'+esc(a.note)+'</div>'+
           '</div>'+
