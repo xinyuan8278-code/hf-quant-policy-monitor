@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中国高频量化 · 政策与技术变化监控</title>
+<meta name="description" content="微信公众号情报监控：中国高频量化业务潜在政策与技术变化（交易所规则、监管动向、交易接入、机房线路、外资与做市）">
+<style>
+  :root{
+    --bg:#0e1014; --panel:#15181e; --panel2:#1a1e25; --line:#262b34;
+    --text:#e9ecf1; --muted:#98a2ae; --muted2:#6f7885;
+    --red:#d8203a; --red2:#ff415b; --redsoft:rgba(216,32,58,.13);
+    --amber:#c9922a; --green:#3f9e6a;
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.62; font-size:15px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 22px 64px}
+
+  /* ---------- header ---------- */
+  header.top{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:26px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;color:var(--red2);font-weight:600;text-transform:uppercase;margin-bottom:10px}
+  h1{font-size:29px;line-height:1.28;margin:0 0 10px;font-weight:700;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+  .metaline{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;background:var(--panel);
+    border:1px solid var(--line);border-radius:999px;padding:5px 12px;
+    font-size:12.5px;color:var(--muted);white-space:nowrap;
+  }
+  .chip b{color:var(--text);font-weight:600}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex:none}
+
+  /* ---------- kpi ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin-bottom:30px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px;position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line)}
+  .kpi.hot::before{background:var(--red)}
+  .kpi .k{font-size:12px;color:var(--muted2);letter-spacing:.04em;margin-bottom:6px}
+  .kpi .v{font-size:26px;font-weight:700;line-height:1.1;letter-spacing:-.02em}
+  .kpi .u{font-size:12px;color:var(--muted2);margin-top:3px}
+
+  /* ---------- notice ---------- */
+  .notice{
+    background:var(--redsoft);border:1px solid rgba(216,32,58,.32);
+    border-left:3px solid var(--red);border-radius:var(--radius);
+    padding:14px 16px;margin-bottom:26px;font-size:13.5px;color:#f0d5da;
+  }
+  .notice b{color:#fff}
+
+  /* ---------- section ---------- */
+  h2{font-size:16px;margin:34px 0 14px;font-weight:650;display:flex;align-items:center;gap:9px;letter-spacing:.01em}
+  h2 .bar{width:3px;height:15px;background:var(--red);border-radius:2px;flex:none}
+  h2 .cnt{font-size:12px;color:var(--muted2);font-weight:400}
+
+  /* ---------- filters ---------- */
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .fbtn{
+    background:var(--panel);border:1px solid var(--line);color:var(--muted);
+    border-radius:999px;padding:7px 15px;font-size:13px;cursor:pointer;
+    transition:.16s;font-family:inherit;
+  }
+  .fbtn:hover{color:var(--text);border-color:#39414d}
+  .fbtn.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:600}
+  .fbtn .n{opacity:.7;margin-left:5px;font-size:11.5px}
+
+  /* ---------- list ---------- */
+  .list{display:flex;flex-direction:column;gap:10px}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:15px 17px;cursor:pointer;transition:.16s;position:relative;
+  }
+  .card:hover{border-color:#39414d;background:var(--panel2)}
+  .card.open{border-color:rgba(216,32,58,.5);background:var(--panel2)}
+  .crow{display:flex;align-items:flex-start;gap:12px}
+  .cbody{flex:1;min-width:0}
+  .ctitle{font-size:14.8px;font-weight:600;line-height:1.5;margin-bottom:7px;word-break:break-word}
+  .cmeta{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-size:12.5px;color:var(--muted2)}
+  .acct{color:var(--muted);font-weight:600}
+  .sep{color:#3a414c}
+  .badge{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid;white-space:nowrap;font-weight:600}
+  .b-official{color:#e8a33d;border-color:rgba(232,163,61,.4);background:rgba(232,163,61,.1)}
+  .b-media{color:#8fa0b5;border-color:#38404c;background:rgba(255,255,255,.03)}
+  .b-rumor{color:#e0708a;border-color:rgba(224,112,138,.4);background:rgba(224,112,138,.1)}
+  .b-vendor{color:#9d8ce0;border-color:rgba(157,140,224,.38);background:rgba(157,140,224,.1)}
+  .b-ref{color:#6f7885;border-color:#333b45;background:rgba(255,255,255,.02)}
+  .catpill{font-size:11px;padding:2px 9px;border-radius:5px;background:rgba(216,32,58,.12);color:#e8708a;border:1px solid rgba(216,32,58,.26);white-space:nowrap;font-weight:600}
+  .caret{color:var(--muted2);font-size:12px;flex:none;margin-top:3px;transition:.2s;user-select:none}
+  .card.open .caret{transform:rotate(90deg);color:var(--red2)}
+  .note{
+    display:none;margin-top:12px;padding:12px 14px;background:#10131a;
+    border-left:2px solid var(--red);border-radius:0 8px 8px 0;
+    font-size:13.4px;color:#bcc5cf;line-height:1.7;
+  }
+  .card.open .note{display:block}
+  .note .lbl{color:var(--muted2);font-size:11.5px;letter-spacing:.06em;display:block;margin-bottom:5px}
+
+  /* ---------- misc blocks ---------- */
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;font-size:13.6px;color:#b8c1cb}
+  .panel ol,.panel ul{margin:0;padding-left:19px}
+  .panel li{margin-bottom:9px}
+  .panel li:last-child{margin-bottom:0}
+  .panel b{color:var(--text)}
+  .kw{display:flex;flex-wrap:wrap;gap:6px}
+  .kw span{background:#11141a;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--muted)}
+  footer{border-top:1px solid var(--line);margin-top:38px;padding-top:18px;color:var(--muted2);font-size:12.3px;line-height:1.8}
+  .empty{padding:34px;text-align:center;color:var(--muted2);border:1px dashed var(--line);border-radius:var(--radius)}
+  a{color:#e8708a}
+  @media(max-width:620px){
+    .wrap{padding:22px 15px 48px}
+    h1{font-size:22px}
+    .kpi .v{font-size:22px}
+    .ctitle{font-size:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">POLICY &amp; TECH WATCH ｜ 微信公众号情报</div>
+    <h1 id="h1"></h1>
+    <div class="sub" id="sub"></div>
+    <div class="metaline" id="metaline"></div>
+  </header>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="notice">
+    <b>本次去重结论：</b>7 天窗口内共命中 24 篇，与已推送指纹清单（35 条）逐条比对后，<b>新增 0 篇</b>——
+    命中集全部为历史已推送条目，故本次无新增相关文章。页面展示的是当前 7 天窗口内的存量有效条目（按五类维度筛选），
+    未用旧文充数。
+  </div>
+
+  <h2><span class="bar"></span>分类清单 <span class="cnt" id="listCnt"></span></h2>
+  <div class="filters" id="filters"></div>
+  <div class="list" id="list"></div>
+
+  <h2><span class="bar"></span>口径与限制</h2>
+  <div class="panel">
+    <ol>
+      <li><b>时间窗口与排序：</b>搜狗微信检索<b>只按“相关度”排序，不支持按时间排序或过滤</b>（实测 <code>ft/et</code> 参数被忽略）。因此 24 小时窗口命中率极低，本监控改用 <b>7 天窗口 + 跨日去重</b>：只输出「近 7 天 ∩ 未被历史推送过」的新增项。</li>
+      <li><b>信息性质：</b>官方信息与非官方推测、传闻、业内转述均纳入。每条均标注性质标签（官方公告 / 自媒体·非官方 / 推测·传闻 / 厂商宣传 / 参考资料），<b>忠于源内容，未扩写、未推测</b>。</li>
+      <li><b>阅读量与点赞不可得：</b>搜狗微信检索结果<b>不返回阅读量</b>；“好友点赞（在看）”属微信客户端本地个性化数据，任何公开检索渠道均无法取得。本页因此<b>未按热度排序</b>。</li>
+      <li><b>原文全文未抓取：</b>搜狗跳转链接会触发反爬（跳转验证页），故无法拉取正文。<code>note</code> 字段 = 检索摘要 + 原留档注记（凡标注“已公开核验”者来自原留档整理）。</li>
+      <li><b>政策时效：</b>涉及规则生效日期者（如上期所实控关系账户办法）已在条目内标注其前瞻性，<b>实际以交易所正式公告为准</b>。</li>
+      <li><b>覆盖范围：</b>本页为抽样监控，不构成对全部发文的全量覆盖；关键词矩阵见文末。</li>
+    </ol>
+  </div>
+
+  <h2><span class="bar"></span>检索关键词矩阵</h2>
+  <div class="kw" id="kws"></div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  var M = window.REPORT_META, A = window.ARTICLES;
+
+  document.getElementById('h1').textContent = M.title;
+  document.getElementById('sub').textContent = M.subtitle;
+
+  /* 顶部元信息 */
+  var ml = document.getElementById('metaline');
+  [["检索窗口", M.windowLabel], ["数据更新", M.updatedAt], ["检索渠道", "搜狗微信 · 会话预热"]]
+    .forEach(function(p){
+      var d = document.createElement('span'); d.className='chip';
+      d.innerHTML = '<span class="dot"></span>' + p[0] + '：<b>' + p[1] + '</b>';
+      ml.appendChild(d);
+    });
+
+  /* KPI */
+  var natCount = {}; A.forEach(function(a){ natCount[a.nature]=(natCount[a.nature]||0)+1; });
+  var kpis = [
+    {k:'7 日窗口命中', v:M.stats.hits,   u:'篇（去重前）', hot:false},
+    {k:'本次新增',     v:M.stats.freshToday, u:'篇（跨日去重后）', hot:true},
+    {k:'已推送指纹',   v:M.stats.seenFingerprints, u:'条（seen_titles.json）', hot:false},
+    {k:'覆盖公众号',   v:M.stats.accounts, u:'个', hot:false},
+    {k:'核心相关条目', v:M.stats.coreItems, u:'条（五维筛选）', hot:false},
+    {k:'备选池',       v:M.stats.extraItems, u:'条（旁证/间接相关）', hot:false}
+  ];
+  var kp = document.getElementById('kpis');
+  kpis.forEach(function(x){
+    var d=document.createElement('div'); d.className='kpi'+(x.hot?' hot':'');
+    d.innerHTML='<div class="k">'+x.k+'</div><div class="v">'+x.v+'</div><div class="u">'+x.u+'</div>';
+    kp.appendChild(d);
+  });
+
+  /* 分类映射 */
+  var catMap={}; M.cats.forEach(function(c){ catMap[c.key]=c; });
+  var NAT={official:'官方公告',media:'自媒体·非官方',rumor:'推测·传闻',vendor:'厂商宣传',ref:'参考资料'};
+
+  /* 筛选按钮 */
+  var cur='all';
+  var fb=document.getElementById('filters');
+  function countOf(tier){ return A.filter(function(a){return a.tier===tier}).length; }
+  var btns=[{key:'all',label:'全部',n:A.length},{key:'core',label:'核心相关',n:countOf('core')}];
+  M.cats.forEach(function(c){ btns.push({key:c.key,label:c.label,n:A.filter(function(a){return a.cat===c.key}).length}); });
+  btns.push({key:'yes',label:'仅新增（本次为 0）',n:0});
+  btns.forEach(function(b){
+    var el=document.createElement('button'); el.className='fbtn'+(b.key==='all'?' on':'');
+    el.innerHTML=b.label+'<span class="n">'+b.n+'</span>';
+    el.dataset.k=b.key;
+    el.onclick=function(){
+      cur=b.key;
+      [].forEach.call(fb.children,function(c){c.classList.remove('on')});
+      el.classList.add('on'); render();
+    };
+    fb.appendChild(el);
+  });
+
+  /* 渲染列表 */
+  var list=document.getElementById('list'), cntEl=document.getElementById('listCnt');
+  function rows(){
+    if(cur==='all')  return A.slice();
+    if(cur==='core') return A.filter(function(a){return a.tier==='core'});
+    if(cur==='yes')  return [];
+    return A.filter(function(a){return a.cat===cur});
+  }
+  function render(){
+    var r=rows(); list.innerHTML='';
+    cntEl.textContent = '共 '+r.length+' 条' + (cur==='yes' ? '（本次 0 篇新增）' : '') + ' · 按发布时间由新到旧';
+    if(!r.length){
+      list.innerHTML='<div class="empty">'+(cur==='yes'?'本次无新增相关文章':'该分类下暂无条目')+'</div>';
+      return;
+    }
+    r.forEach(function(a){
+      var c=catMap[a.cat]||{label:a.cat};
+      var card=document.createElement('article'); card.className='card';
+      card.innerHTML =
+        '<div class="crow">'+
+          '<div class="caret">▶</div>'+
+          '<div class="cbody">'+
+            '<div class="ctitle">'+esc(a.title)+'</div>'+
+            '<div class="cmeta">'+
+              '<span class="acct">'+esc(a.account)+'</span><span class="sep">|</span>'+
+              '<span>'+esc(a.date)+'</span>'+
+              '<span class="catpill">'+esc(c.label)+'</span>'+
+              '<span class="badge b-'+a.nature+'">'+(NAT[a.nature]||a.nature)+'</span>'+
+            '</div>'+
+            '<div class="note"><span class="lbl">源摘要 / 留档注记</span>'+esc(a.note)+'</div>'+
+          '</div>'+
+        '</div>';
+      card.onclick=function(){ card.classList.toggle('open'); };
+      list.appendChild(card);
+    });
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]}); }
+  render();
+
+  /* 关键词 */
+  var kw=document.getElementById('kws');
+  M.keywords.forEach(function(k){ var s=document.createElement('span'); s.textContent=k; kw.appendChild(s); });
+
+  /* footer */
+  document.getElementById('foot').innerHTML =
+    '数据来源：微信公众号文章（搜狗微信检索）｜检索渠道：'+esc(M.channel)+'<br>'+
+    '生成时间：'+esc(M.updatedAt)+' ｜ 留档目录：微信高频量化政策日报（2026-10-01.md / 2026-10-02.md / seen_titles.json）<br>'+
+    '本页仅供内部研究参考，不构成投资建议；涉及监管规则请以交易所与监管机构正式公告为准。';
+})();
+</script>
+</body>
+</html>
