@@ -197,7 +197,8 @@
   var freshInList = A.filter(function(a){ return a.new === true; }).length;
   document.getElementById('notice').innerHTML = fresh > 0
     ? '<b>本次去重结论：</b>7 天窗口内共命中 ' + M.stats.hits + ' 篇，与已推送指纹清单（' + M.stats.seenFingerprints +
-      ' 条）逐条比对后，<b>新增 ' + fresh + ' 篇</b>。下方带 <span class="badge b-new">本次新增</span> 角标的条目即为本轮新出现、此前未推送过的文章。'
+      ' 条）逐条比对后，<b>原始新增 ' + (M.stats.rawFresh != null ? M.stats.rawFresh : fresh) + ' 篇</b>；剔除仅命中“高频 / 监管”字面而与本主题无关者后，<b>新增 ' + fresh +
+      ' 篇</b>列入下方清单。带 <span class="badge b-new">本次新增</span> 角标的条目即本轮新出现、此前未推送过的文章。'
     : '<b>本次去重结论：</b>7 天窗口内共命中 ' + M.stats.hits + ' 篇，与已推送指纹清单（' + M.stats.seenFingerprints +
       ' 条）逐条比对后，<b>新增 0 篇</b>——命中集全部为历史已推送条目，故本次无新增相关文章。' +
       '页面展示的是当前 7 天窗口内的存量有效条目（按五类维度筛选），未用旧文充数。' +
@@ -274,7 +275,7 @@
   /* footer */
   document.getElementById('foot').innerHTML =
     '数据来源：微信公众号文章（搜狗微信检索）｜检索渠道：'+esc(M.channel)+'<br>'+
-    '生成时间：'+esc(M.updatedAt)+' ｜ 留档目录：微信高频量化政策日报（2026-10-01.md / 2026-10-02.md / seen_titles.json）<br>'+
+    '生成时间：'+esc(M.updatedAt)+' ｜ 留档目录：微信高频量化政策日报（2026-10-01.md / 2026-10-02.md / 2026-10-05.md / seen_titles.json）<br>'+
     '本页仅供内部研究参考，不构成投资建议；涉及监管规则请以交易所与监管机构正式公告为准。';
 })();
 </script>
