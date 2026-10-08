@@ -203,6 +203,9 @@
       ' 条）逐条比对后，<b>新增 0 篇</b>——命中集全部为历史已推送条目，故本次无新增相关文章。' +
       '页面展示的是当前 7 天窗口内的存量有效条目（按五类维度筛选），未用旧文充数。' +
       (freshInList ? '（注：下方有 ' + freshInList + ' 条标记为新增，与 KPI 不一致，请核查数据。）' : '');
+  if (M.coverageNote) {
+    document.getElementById('notice').innerHTML += '<br><br><b>覆盖说明：</b>' + esc(M.coverageNote);
+  }
 
   /* 分类映射 */
   var catMap={}; M.cats.forEach(function(c){ catMap[c.key]=c; });
@@ -275,7 +278,7 @@
   /* footer */
   document.getElementById('foot').innerHTML =
     '数据来源：微信公众号文章（搜狗微信检索）｜检索渠道：'+esc(M.channel)+'<br>'+
-    '生成时间：'+esc(M.updatedAt)+' ｜ 留档目录：微信高频量化政策日报（2026-10-01.md / 2026-10-02.md / 2026-10-05.md / 2026-10-07.md / seen_titles.json）<br>'+
+    '生成时间：'+esc(M.updatedAt)+' ｜ 留档目录：微信高频量化政策日报（2026-10-01.md / 2026-10-02.md / 2026-10-05.md / 2026-10-07.md / 2026-10-08.md / seen_titles.json）<br>'+
     '本页仅供内部研究参考，不构成投资建议；涉及监管规则请以交易所与监管机构正式公告为准。';
 })();
 </script>
