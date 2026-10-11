@@ -143,7 +143,7 @@
   <h2><span class="bar"></span>口径与限制</h2>
   <div class="panel">
     <ol>
-      <li><b>时间窗口与排序：</b>检索通道为 <b>TikHub 微信搜索 API</b>（<code>wechat_search/v2</code>，<code>publish_time=week</code>、<code>cursor</code> 翻页），窗口按<b>近 7 天 + 跨日去重</b>：只输出「近 7 天 ∩ 未被历史推送过」的新增项。每轮 <code>latest</code>（按时间）与 <code>hot</code>（按热度）双跑。</li>
+      <li><b>时间窗口与排序：</b>检索通道为 <b>TikHub 微信搜索 API</b>（<code>wechat_search/v2</code>，<code>publish_time=day</code>、<code>cursor</code> 翻页），窗口按<b>近 2 天 + 跨日去重</b>：只输出「近 2 天 ∩ 未被历史推送过」的新增项。每轮 <code>latest</code>（按时间）与 <code>hot</code>（按热度）双跑。</li>
       <li><b>信息性质：</b>官方信息与非官方推测、传闻、业内转述均纳入。每条均标注性质标签（官方公告 / 自媒体·非官方 / 推测·传闻 / 厂商宣传 / 参考资料），<b>忠于源内容，未扩写、未推测</b>。</li>
       <li><b>阅读量/转发量不可得：</b>微信接口<b>不返回阅读量、点赞量、转发量</b>（该数据不可得），仅提供搜索相关性排序。本页因此以 <code>sort=hot</code> 热度位次 + 主题相关强度作近似排序，<b>不构成真实转发量排名</b>。</li>
       <li><b>原文全文：</b>入围条目经 <code>wechat_mp/v2/fetch_article_detail_h5</code> 抓取正文核验（取 <code>data.content.content_text</code>）；纯图片长图文可能返回空文本，此类条目不入选。<code>note</code> 字段 = 源文摘录 + 留档注记。</li>
@@ -168,7 +168,7 @@
 
   /* 顶部元信息 */
   var ml = document.getElementById('metaline');
-  [["检索窗口", M.windowLabel], ["数据更新", M.updatedAt], ["检索渠道", "搜狗微信 · 会话预热"]]
+  [["检索窗口", M.windowLabel], ["数据更新", M.updatedAt], ["检索渠道", "TikHub 微信搜索 API"]]
     .forEach(function(p){
       var d = document.createElement('span'); d.className='chip';
       d.innerHTML = '<span class="dot"></span>' + p[0] + '：<b>' + p[1] + '</b>';
@@ -195,13 +195,14 @@
   /* 结论提示（随 stats.freshToday 动态渲染） */
   var fresh = M.stats.freshToday || 0;
   var freshInList = A.filter(function(a){ return a.new === true; }).length;
+  var wl = (M.windowLabel || '窗口').replace(/^近\s*/, '近 ');
   document.getElementById('notice').innerHTML = fresh > 0
-    ? '<b>本次去重结论：</b>7 天窗口内共命中 ' + M.stats.hits + ' 篇，与已推送指纹清单（' + M.stats.seenFingerprints +
+    ? '<b>本次去重结论：</b>' + esc(wl) + ' 内共命中 ' + M.stats.hits + ' 篇，与已推送指纹清单（' + M.stats.seenFingerprints +
       ' 条）逐条比对后，<b>原始新增 ' + (M.stats.rawFresh != null ? M.stats.rawFresh : fresh) + ' 篇</b>；剔除仅命中“高频 / 监管”字面而与本主题无关者后，<b>新增 ' + fresh +
       ' 篇</b>列入下方清单。带 <span class="badge b-new">本次新增</span> 角标的条目即本轮新出现、此前未推送过的文章。'
-    : '<b>本次去重结论：</b>7 天窗口内共命中 ' + M.stats.hits + ' 篇，与已推送指纹清单（' + M.stats.seenFingerprints +
+    : '<b>本次去重结论：</b>' + esc(wl) + ' 内共命中 ' + M.stats.hits + ' 篇，与已推送指纹清单（' + M.stats.seenFingerprints +
       ' 条）逐条比对后，<b>新增 0 篇</b>——命中集全部为历史已推送条目，故本次无新增相关文章。' +
-      '页面展示的是当前 7 天窗口内的存量有效条目（按五类维度筛选），未用旧文充数。' +
+      '页面展示的是当前窗口内的存量有效条目（按五类维度筛选），未用旧文充数。' +
       (freshInList ? '（注：下方有 ' + freshInList + ' 条标记为新增，与 KPI 不一致，请核查数据。）' : '');
   if (M.coverageNote) {
     document.getElementById('notice').innerHTML += '<br><br><b>覆盖说明：</b>' + esc(M.coverageNote);
@@ -277,7 +278,7 @@
 
   /* footer */
   document.getElementById('foot').innerHTML =
-    '数据来源：微信公众号文章（搜狗微信检索）｜检索渠道：'+esc(M.channel)+'<br>'+
+    '数据来源：微信公众号文章（TikHub 微信搜索 API）｜检索渠道：'+esc(M.channel)+'<br>'+
     '生成时间：'+esc(M.updatedAt)+' ｜ 留档目录：微信高频量化政策日报（2026-10-01.md / 2026-10-02.md / 2026-10-05.md / 2026-10-07.md / 2026-10-08.md / 2026-10-09.md / 2026-10-10.md / 2026-10-11.md / seen_titles.json）<br>'+
     '本页仅供内部研究参考，不构成投资建议；涉及监管规则请以交易所与监管机构正式公告为准。';
 })();
