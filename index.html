@@ -178,7 +178,7 @@
   /* KPI */
   var natCount = {}; A.forEach(function(a){ natCount[a.nature]=(natCount[a.nature]||0)+1; });
   var kpis = [
-    {k:'7 日窗口命中', v:M.stats.hits,   u:'篇（去重前）', hot:false},
+    {k:'近 2 天窗口命中', v:M.stats.hits,   u:'篇（去重前）', hot:false},
     {k:'本次新增',     v:M.stats.freshToday, u:'篇（跨日去重后）', hot:true},
     {k:'已推送指纹',   v:M.stats.seenFingerprints, u:'条（seen_titles.json）', hot:false},
     {k:'覆盖公众号',   v:M.stats.accounts, u:'个', hot:false},
@@ -279,7 +279,7 @@
   /* footer */
   document.getElementById('foot').innerHTML =
     '数据来源：微信公众号文章（TikHub 微信搜索 API）｜检索渠道：'+esc(M.channel)+'<br>'+
-    '生成时间：'+esc(M.updatedAt)+' ｜ 留档目录：微信高频量化政策日报（2026-10-01.md / 2026-10-02.md / 2026-10-05.md / 2026-10-07.md / 2026-10-08.md / 2026-10-09.md / 2026-10-10.md / 2026-10-11.md / 2026-10-13.md / seen_titles.json）<br>'+
+    '生成时间：'+esc(M.updatedAt)+' ｜ 留档目录：微信高频量化政策日报（2026-10-01.md / 2026-10-02.md / 2026-10-05.md / 2026-10-07.md / 2026-10-08.md / 2026-10-09.md / 2026-10-10.md / 2026-10-11.md / 2026-10-13.md / 2026-10-14.md / seen_titles.json）<br>'+
     '本页仅供内部研究参考，不构成投资建议；涉及监管规则请以交易所与监管机构正式公告为准。';
 })();
 </script>
