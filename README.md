@@ -6,7 +6,7 @@
 - **GitHub**：https://github.com/xinyuan8278-code/hf-quant-policy-monitor
 - **检索渠道**：微信公众号文章（搜狗微信检索，会话预热版脚本，24 关键词矩阵）
 - **更新机制**：7 天窗口 + 跨日去重（只输出「近 7 天 ∩ 未被历史推送过」的新增项）
-- **更新计划**：每周一、周三、周五 09:30（北京时间），定时任务见 `.github/workflows/scheduled-update.yml`
+- **更新计划**：每日 09:30（北京时间），定时任务见 `.github/workflows/scheduled-update.yml`
 - **五个维度**：交易所规则调整 / 监管动向与新规 / 技术与交易接入 / 机房搬迁与线路 / 外资高频与做市
 - **数据更新日期**：2026-10-02
 
@@ -19,7 +19,7 @@
 | `_headers` | Netlify 缓存头（`data.js` 禁用缓存，保证更新即时可见） |
 | `deploy_netlify.py` | Netlify API 直连部署脚本（增量上传） |
 | `push_github.py` | 通过 GitHub API 建仓并推送（可选） |
-| `.github/workflows/scheduled-update.yml` | 定时任务：一/三/五 09:30 校验数据新鲜度并触发 Netlify 重新部署 |
+| `.github/workflows/scheduled-update.yml` | 定时任务：每日 09:30 校验数据新鲜度并触发 Netlify 重新部署 |
 
 ## 部署
 
